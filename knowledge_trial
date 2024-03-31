@@ -1,0 +1,32 @@
+{
+    "questions": [
+      {
+        "question": "What is the capital of France?",
+        "answer": [
+          "Paris",
+          "London",
+          "Berlin"
+        ]
+      },
+      {
+        "question": "what\\",
+        "answer": "no"
+      },
+      {
+        "question": "what kind of animal is a frog?",
+        "answer": "amphibian"
+      },
+      {
+        "question": "how many legs do humans have?",
+        "answer": "2"
+      },
+      {
+        "question": "HU?",
+        "answer": "You know!"
+      },
+      {
+        "question": "but would you lose?",
+        "answer": "Nah, I'd win"
+      }
+    ]
+  }

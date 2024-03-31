@@ -1,0 +1,57 @@
+const form = document.getElementById("chat-form");
+const messageInput = document.getElementById("message");
+const targetContainer = document.getElementById("messages");
+const userTemplate = document.querySelector('#message-template-user');
+const assistantTemplate = document.querySelector('#message-template-assistant');
+const converter = new showdown.Converter();
+const messages = [];
+
+form.addEventListener("submit", async function(e) {
+    e.preventDefault();
+    const message = messageInput.value.trim();
+    if (!message) return;
+
+    const userTemplateClone = userTemplate.content.cloneNode(true);
+    userTemplateClone.querySelector(".message-content").innerText = message;
+    targetContainer.appendChild(userTemplateClone);
+
+    const assistantTemplateClone = assistantTemplate.content.cloneNode(true);
+    let messageDiv = assistantTemplateClone.querySelector(".message-content");
+    targetContainer.appendChild(assistantTemplateClone);
+
+    // Add the "Typing..." indicator dynamically
+    messageDiv.innerHTML = "<em class='typing-indicator'>Typing...</em>";
+
+    messages.push({
+        "role": "user",
+        "content": message
+    });
+    const response = await fetch("/chat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ messages: messages })
+    });
+
+    let answer = "";
+    for await (const event of readNDJSONStream(response.body)) {
+        if (event["choices"] && event["choices"].length > 0 && event["choices"][0]["delta"]["content"]) {
+            // Clear out the DIV if its the first answer chunk we've received
+            if (answer == "") {
+                messageDiv.innerHTML = "";
+            }
+            answer += event["choices"][0]["delta"]["content"];
+            messageDiv.innerHTML = converter.makeHtml(answer);
+            messageDiv.scrollIntoView();
+        } else if (event["error"]) {
+            messageDiv.innerHTML = "Error: " + event["error"];
+        }
+    }
+    messages.push({
+        "role": "assistant",
+        "content": answer
+    });
+
+    messageInput.value = "";
+});

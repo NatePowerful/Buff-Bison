@@ -1,0 +1,34 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+}
+
+#messages .toast-container {
+    margin-bottom: 12px;
+}
+
+.background-user {
+    background-color: #2372cc;
+}
+
+.background-assistant {
+    background-color: rgb(252, 55, 55);
+}
+
+.custom-icon {
+    width: 100px;
+    height: auto;
+    margin-right: 5px;
+}
+
+.user-label,
+.assistant-label {
+    font-size: 25px;
+}
+
+#messages {
+    overflow-y: auto;
+}
